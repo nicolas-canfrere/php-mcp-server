@@ -6,6 +6,22 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a Symfony 7.3-based PHP MCP (Model Context Protocol) server built with PHP 8.2+. The project uses Docker for containerization and includes a comprehensive development workflow with quality tools.
 
+## Coding standards
+
+- Variable name MUST BE explicite. Avoid short names like x, tmp...
+- Class, enum, interface names MUST BE explicite.
+- Class, enum, interface names ALWAYS in pascal case.
+- Interface names MUST BE ALWAYS SUFFIXED WITH "Interface"
+- Enum names MUST BE ALWAYS SUFFIXED WITH "Enum"
+- Trait names MUST BE ALWAYS SUFFIXED WITH "Trait"
+- Abstract class names MUST BE ALWAYS PREFIXED WITH "Abstract"
+- Variable and function names ALWAYS in camel case
+- Code MUST follow PSR-12 coding standards and Symfony coding standards (see @docs/symfony_coding_standards.md)
+- PSR-12 coding standards and Symfony coding standards can be fixed with PHP CS Fixer
+- Code MUST follow the SOLID principles
+- Design patterns MUST BE used as often as possible (ex: factory, strategy, builder, adapter, decorator, ...)
+- PHPStan analyse MUST PASS
+
 ## Development Commands
 
 ### Essential Commands
