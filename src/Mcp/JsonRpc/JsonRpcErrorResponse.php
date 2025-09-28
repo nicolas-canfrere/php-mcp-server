@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mcp\JsonRpc;
 
-final readonly class JsonRpcErrorResponse implements JsonRpcIdentifiableInterface, JsonRpcMessageInterface
+final readonly class JsonRpcErrorResponse implements JsonRpcIdentifiableInterface, JsonRpcMessageInterface, \JsonSerializable
 {
     public function __construct(
         private JsonRpcVersionEnum $jsonRpc,
@@ -26,5 +26,21 @@ final readonly class JsonRpcErrorResponse implements JsonRpcIdentifiableInterfac
     public function getJsonRpc(): JsonRpcVersionEnum
     {
         return $this->jsonRpc;
+    }
+
+    /**
+     * @return array{
+     *     jsonrpc: string,
+     *     id: int|string|null,
+     *     error: JsonRpcError
+     * }
+     */
+    public function jsonSerialize(): array
+    {
+        return [
+            'jsonrpc' => $this->jsonRpc->value,
+            'id' => $this->id,
+            'error' => $this->error,
+        ];
     }
 }

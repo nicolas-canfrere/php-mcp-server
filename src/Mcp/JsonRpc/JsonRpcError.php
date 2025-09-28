@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mcp\JsonRpc;
 
-final readonly class JsonRpcError
+final readonly class JsonRpcError implements \JsonSerializable
 {
     /**
      * @param array<string, mixed> $data
@@ -32,5 +32,21 @@ final readonly class JsonRpcError
     public function getMessage(): string
     {
         return $this->message;
+    }
+
+    /**
+     * @return array{
+     *     code: int,
+     *     message: string,
+     *     data: array<string,mixed>|null
+     * }
+     */
+    public function jsonSerialize(): array
+    {
+        return [
+            'code' => $this->code->value,
+            'message' => $this->message,
+            'data' => $this->data,
+        ];
     }
 }

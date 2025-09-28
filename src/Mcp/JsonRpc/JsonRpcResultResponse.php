@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mcp\JsonRpc;
 
-final readonly class JsonRpcResultResponse implements JsonRpcIdentifiableInterface, JsonRpcMessageInterface
+final readonly class JsonRpcResultResponse implements JsonRpcIdentifiableInterface, JsonRpcMessageInterface, \JsonSerializable
 {
     /**
      * @param array<string, mixed> $result
@@ -32,5 +32,21 @@ final readonly class JsonRpcResultResponse implements JsonRpcIdentifiableInterfa
     public function getJsonRpc(): JsonRpcVersionEnum
     {
         return $this->jsonRpc;
+    }
+
+    /**
+     * @return array{
+     *     jsonrpc: string,
+     *     id: int|string|null,
+     *     result: array<string, mixed>
+     * }
+     */
+    public function jsonSerialize(): array
+    {
+        return [
+            'jsonrpc' => $this->jsonRpc->value,
+            'id' => $this->id,
+            'result' => $this->result,
+        ];
     }
 }

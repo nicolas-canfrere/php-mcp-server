@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Mcp\JsonRpc;
 
+use App\Mcp\McpMethodEnum;
+
 final readonly class JsonRpcRequest implements JsonRpcIdentifiableInterface, JsonRpcMessageInterface
 {
     /**
@@ -12,7 +14,7 @@ final readonly class JsonRpcRequest implements JsonRpcIdentifiableInterface, Jso
     public function __construct(
         private JsonRpcVersionEnum $jsonRpc,
         private string|int|null $id,
-        private string $method,
+        private McpMethodEnum $method,
         private array $params,
     ) {
     }
@@ -22,7 +24,7 @@ final readonly class JsonRpcRequest implements JsonRpcIdentifiableInterface, Jso
         return null === $this->id;
     }
 
-    public function getMethod(): string
+    public function getMethod(): McpMethodEnum
     {
         return $this->method;
     }
