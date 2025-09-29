@@ -35,6 +35,7 @@ final class JsonRpcErrorTest extends TestCase
 
         $this->assertSame(-32602, $serialized['code']);
         $this->assertSame('Invalid parameters', $serialized['message']);
+        $this->assertArrayHasKey('data', $serialized);
         $this->assertSame(['expected' => 'string', 'received' => 'int'], $serialized['data']);
     }
 
@@ -49,7 +50,7 @@ final class JsonRpcErrorTest extends TestCase
 
         $this->assertSame(-32601, $serialized['code']);
         $this->assertSame('Method not found', $serialized['message']);
-        $this->assertNull($serialized['data']);
+        $this->assertArrayNotHasKey('data', $serialized);
     }
 
     public function testConstructionWithEachErrorCode(): void

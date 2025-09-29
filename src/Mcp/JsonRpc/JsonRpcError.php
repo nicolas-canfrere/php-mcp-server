@@ -38,15 +38,20 @@ final readonly class JsonRpcError implements \JsonSerializable
      * @return array{
      *     code: int,
      *     message: string,
-     *     data: array<string,mixed>|null
+     *     data?: array<string,mixed>
      * }
      */
     public function jsonSerialize(): array
     {
-        return [
+        $result = [
             'code' => $this->code->value,
             'message' => $this->message,
-            'data' => $this->data,
         ];
+
+        if (null !== $this->data) {
+            $result['data'] = $this->data;
+        }
+
+        return $result;
     }
 }
