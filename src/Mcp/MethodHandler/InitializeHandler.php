@@ -16,10 +16,10 @@ final readonly class InitializeHandler implements McpMethodHandlerInterface
      * @param iterable<CapabilityRegistryInterface> $registries
      */
     public function __construct(
-        private string   $name,
-        private string   $title,
-        private string   $version,
-        private string   $protocolVersion,
+        private string $name,
+        private string $title,
+        private string $version,
+        private string $protocolVersion,
         private iterable $registries,
     ) {
     }

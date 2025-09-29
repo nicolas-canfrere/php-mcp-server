@@ -6,5 +6,4 @@ namespace App\Mcp\Exception;
 
 final class ToolNotFoundException extends \InvalidArgumentException
 {
-
 }

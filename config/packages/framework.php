@@ -15,9 +15,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                 ],
                 'weather.client' => [
                     'base_uri' => 'https://api.open-meteo.com/v1/forecast',
-                ]
-            ]
-        ]
+                ],
+            ],
+        ],
     ]);
     if ('test' === $containerConfigurator->env()) {
         $containerConfigurator->extension('framework', [

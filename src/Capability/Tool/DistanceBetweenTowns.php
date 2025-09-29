@@ -24,46 +24,8 @@ final class DistanceBetweenTowns implements ToolCapabilityInterface
 
         return [
             'content' => [
-                ['type'=>'text', 'text'=> json_encode(['distance' => sprintf('%d km', $distanceKm)])],
-            ]
-        ];
-    }
-
-    private function getDistance(array $latLongTown1, array $latLongTown2): int
-    {
-        $earthRadiusKm = 6371;
-        $latitudeDelta = deg2rad($latLongTown2['latitude'] - $latLongTown1['latitude']);
-        $longitudeDelta = deg2rad($latLongTown2['longitude'] - $latLongTown1['longitude']);
-        $haversineA = sin($latitudeDelta / 2) * sin($latitudeDelta / 2) +
-            cos(deg2rad($latLongTown1['latitude'])) * cos(deg2rad($latLongTown2['latitude'])) *
-            sin($longitudeDelta / 2) * sin($longitudeDelta / 2);
-        $haversineC = 2 * atan2(sqrt($haversineA), sqrt(1 - $haversineA));
-        $distanceKm = $earthRadiusKm * $haversineC;
-
-        return (int) round($distanceKm);
-    }
-
-    private function getLatLong(string $townName): array
-    {
-        $response = $this->geoLocationClient->request(
-            'GET',
-            '',
-            [
-                'query' => [
-                    'name' => $townName,
-                    'count' => 1,
-                    'language' => 'fr',
-                ]
-            ]
-        );
-        $result = $response->toArray();
-        if (empty($result['results'])) {
-            throw new \Exception(sprintf('Town "%s" not found', $townName));
-        }
-
-        return [
-            'latitude' => $result['results'][0]['latitude'],
-            'longitude' => $result['results'][0]['longitude'],
+                ['type' => 'text', 'text' => json_encode(['distance' => sprintf('%d km', $distanceKm)])],
+            ],
         ];
     }
 
@@ -93,5 +55,43 @@ final class DistanceBetweenTowns implements ToolCapabilityInterface
     public function getName(): string
     {
         return 'Distance_between_towns';
+    }
+
+    private function getDistance(array $latLongTown1, array $latLongTown2): int
+    {
+        $earthRadiusKm = 6371;
+        $latitudeDelta = deg2rad($latLongTown2['latitude'] - $latLongTown1['latitude']);
+        $longitudeDelta = deg2rad($latLongTown2['longitude'] - $latLongTown1['longitude']);
+        $haversineA = sin($latitudeDelta / 2) * sin($latitudeDelta / 2) +
+            cos(deg2rad($latLongTown1['latitude'])) * cos(deg2rad($latLongTown2['latitude'])) *
+            sin($longitudeDelta / 2) * sin($longitudeDelta / 2);
+        $haversineC = 2 * atan2(sqrt($haversineA), sqrt(1 - $haversineA));
+        $distanceKm = $earthRadiusKm * $haversineC;
+
+        return (int) round($distanceKm);
+    }
+
+    private function getLatLong(string $townName): array
+    {
+        $response = $this->geoLocationClient->request(
+            'GET',
+            '',
+            [
+                'query' => [
+                    'name' => $townName,
+                    'count' => 1,
+                    'language' => 'fr',
+                ],
+            ]
+        );
+        $result = $response->toArray();
+        if (empty($result['results'])) {
+            throw new \Exception(sprintf('Town "%s" not found', $townName));
+        }
+
+        return [
+            'latitude' => $result['results'][0]['latitude'],
+            'longitude' => $result['results'][0]['longitude'],
+        ];
     }
 }
