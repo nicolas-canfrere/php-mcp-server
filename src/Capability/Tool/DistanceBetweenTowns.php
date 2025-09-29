@@ -16,6 +16,13 @@ final class DistanceBetweenTowns implements ToolCapabilityInterface
 
     public function handle(array $arguments): array
     {
+        if (!isset($arguments['town_1']) || !is_string($arguments['town_1'])) {
+            throw new \InvalidArgumentException('town_1 must be a string');
+        }
+        if (!isset($arguments['town_2']) || !is_string($arguments['town_2'])) {
+            throw new \InvalidArgumentException('town_2 must be a string');
+        }
+
         $town1 = $arguments['town_1'];
         $town2 = $arguments['town_2'];
         $latLongTown1 = $this->getLatLong($town1);
@@ -57,6 +64,10 @@ final class DistanceBetweenTowns implements ToolCapabilityInterface
         return 'Distance_between_towns';
     }
 
+    /**
+     * @param array{latitude: float, longitude: float} $latLongTown1
+     * @param array{latitude: float, longitude: float} $latLongTown2
+     */
     private function getDistance(array $latLongTown1, array $latLongTown2): int
     {
         $earthRadiusKm = 6371;
@@ -71,6 +82,9 @@ final class DistanceBetweenTowns implements ToolCapabilityInterface
         return (int) round($distanceKm);
     }
 
+    /**
+     * @return array{latitude: float, longitude: float}
+     */
     private function getLatLong(string $townName): array
     {
         $response = $this->geoLocationClient->request(
@@ -85,13 +99,22 @@ final class DistanceBetweenTowns implements ToolCapabilityInterface
             ]
         );
         $result = $response->toArray();
-        if (empty($result['results'])) {
+        if (empty($result['results']) || !is_array($result['results'])) {
             throw new \Exception(sprintf('Town "%s" not found', $townName));
         }
 
+        $firstResult = $result['results'][0];
+        if (!is_array($firstResult) || !isset($firstResult['latitude'], $firstResult['longitude'])) {
+            throw new \Exception(sprintf('Invalid response format for town "%s"', $townName));
+        }
+
+        if (!is_numeric($firstResult['latitude']) || !is_numeric($firstResult['longitude'])) {
+            throw new \Exception(sprintf('Invalid latitude/longitude format for town "%s"', $townName));
+        }
+
         return [
-            'latitude' => $result['results'][0]['latitude'],
-            'longitude' => $result['results'][0]['longitude'],
+            'latitude' => (float) $firstResult['latitude'],
+            'longitude' => (float) $firstResult['longitude'],
         ];
     }
 }

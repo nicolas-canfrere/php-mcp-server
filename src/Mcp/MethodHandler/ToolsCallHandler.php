@@ -29,7 +29,9 @@ final readonly class ToolsCallHandler implements McpMethodHandlerInterface
     public function handle(JsonRpcRequest $jsonRpcRequest): JsonRpcResultResponse|JsonRpcErrorResponse
     {
         try {
+            /** @var string $toolName */
             $toolName = $jsonRpcRequest->getParams()['name'];
+            /** @var array<string, mixed> $toolArguments */
             $toolArguments = $jsonRpcRequest->getParams()['arguments'];
             $tool = $this->toolsRegistry->getCapability($toolName);
             if (null === $tool) {

@@ -39,6 +39,9 @@ final readonly class ToolsListHandler implements McpMethodHandlerInterface
         );
     }
 
+    /**
+     * @return list<array<string, mixed>>
+     */
     private function formatCapabilitiesForResponse(): array
     {
         $definitions = [];

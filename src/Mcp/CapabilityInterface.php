@@ -13,5 +13,10 @@ interface CapabilityInterface
 
     public function getName(): string;
 
+    /**
+     * @param array<string, mixed> $arguments
+     *
+     * @return array<string, mixed>
+     */
     public function handle(array $arguments): array;
 }

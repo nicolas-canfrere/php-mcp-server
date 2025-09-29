@@ -17,6 +17,10 @@ final class GetWeather implements ToolCapabilityInterface
 
     public function handle(array $arguments): array
     {
+        if (!isset($arguments['location']) || !is_string($arguments['location'])) {
+            throw new \InvalidArgumentException('location must be a string');
+        }
+
         $location = $arguments['location'];
         $latLongLocation = $this->getLatLong($location);
         $weather = $this->getWeather($latLongLocation);
@@ -51,6 +55,11 @@ final class GetWeather implements ToolCapabilityInterface
         return 'get_weather';
     }
 
+    /**
+     * @param array{latitude: float, longitude: float} $latLong
+     *
+     * @return array<mixed>
+     */
     private function getWeather(array $latLong): array
     {
         $response = $this->weatherClient->request(
@@ -69,6 +78,9 @@ final class GetWeather implements ToolCapabilityInterface
         return $response->toArray();
     }
 
+    /**
+     * @return array{latitude: float, longitude: float}
+     */
     private function getLatLong(string $townName): array
     {
         $response = $this->geoLocationClient->request(
@@ -83,13 +95,22 @@ final class GetWeather implements ToolCapabilityInterface
             ]
         );
         $result = $response->toArray();
-        if (empty($result['results'])) {
+        if (empty($result['results']) || !is_array($result['results'])) {
             throw new \Exception(sprintf('Town "%s" not found', $townName));
         }
 
+        $firstResult = $result['results'][0];
+        if (!is_array($firstResult) || !isset($firstResult['latitude'], $firstResult['longitude'])) {
+            throw new \Exception(sprintf('Invalid response format for town "%s"', $townName));
+        }
+
+        if (!is_numeric($firstResult['latitude']) || !is_numeric($firstResult['longitude'])) {
+            throw new \Exception(sprintf('Invalid latitude/longitude format for town "%s"', $townName));
+        }
+
         return [
-            'latitude' => $result['results'][0]['latitude'],
-            'longitude' => $result['results'][0]['longitude'],
+            'latitude' => (float) $firstResult['latitude'],
+            'longitude' => (float) $firstResult['longitude'],
         ];
     }
 }

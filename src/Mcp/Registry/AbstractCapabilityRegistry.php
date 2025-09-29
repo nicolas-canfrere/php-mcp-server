@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Mcp\Registry;
 
 use App\Mcp\CapabilityInterface;
+use Symfony\Component\DependencyInjection\Argument\RewindableGenerator;
 
 abstract class AbstractCapabilityRegistry implements CapabilityRegistryInterface
 {
     /**
-     * @param iterable<CapabilityInterface> $capabilities
+     * @param RewindableGenerator<CapabilityInterface> $capabilities
      */
     public function __construct(
         protected iterable $capabilities,
