@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(make test:*)"
+      "Bash(make test:*)",
+      "Bash(make apply-cs:*)",
+      "Bash(make static-code-analysis:*)"
     ],
     "deny": [],
     "ask": []
