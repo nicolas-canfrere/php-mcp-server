@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mcp\MethodHandler;
 
+use App\Mcp\Exception\ToolNotFoundException;
 use App\Mcp\JsonRpc\JsonRpcError;
 use App\Mcp\JsonRpc\JsonRpcErrorCodeEnum;
 use App\Mcp\JsonRpc\JsonRpcErrorResponse;
@@ -31,6 +32,11 @@ final readonly class ToolsCallHandler implements McpMethodHandlerInterface
             $toolName = $jsonRpcRequest->getParams()['name'];
             $toolArguments = $jsonRpcRequest->getParams()['arguments'];
             $tool = $this->toolsRegistry->getCapability($toolName);
+            if (null === $tool) {
+                throw new ToolNotFoundException(
+                    'No such tool "' . $toolName . '" exists',
+                );
+            }
 
             return new JsonRpcResultResponse(
                 $jsonRpcRequest->getJsonRpc(),
